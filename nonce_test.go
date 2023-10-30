@@ -10,21 +10,17 @@ import (
 	"testing"
 )
 
-func newRandReadMock(value []byte) func(b []byte) (int, error) {
-	return func(b []byte) (int, error) {
-		for i := 0; i < min(len(value), len(b)); i++ {
-			b[i] = value[i]
-		}
-
-		return len(value), nil
-	}
-}
-
 func TestNewNonceHandler(t *testing.T) {
 	t.Run("normal", func(t *testing.T) {
 		resp := httptest.NewRecorder()
 		ginContext, _ := gin.CreateTestContext(resp)
-		handler := nonce.New().WithRandRead(newRandReadMock([]byte("bar")))
+		handler := nonce.New().WithRandRead(func(b []byte) (int, error) {
+			b[0] = 'b'
+			b[1] = 'a'
+			b[2] = 'r'
+
+			return 3, nil
+		})
 
 		handler.Middleware()(ginContext)
 
