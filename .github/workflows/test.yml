@@ -12,7 +12,7 @@ concurrency:
   group: "${{ github.workflow }}-$${{ github.pull_request.number || github.run_id }}"
   cancel-in-progress: true
 jobs:
-  test-with-mocks:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
